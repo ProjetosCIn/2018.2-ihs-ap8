@@ -47,5 +47,5 @@ int main(){
       }
   }
   sum = sum * 4 / SIZE;
-  cout << endl << "Soma porra: " << sum;
+  cout << endl << "Soma: " << sum;
 }
