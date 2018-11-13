@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <time.h>       /* time */
 #include<bits/stdc++.h>
+#include <omp.h>
 
 using namespace std;
 
 #define CASA_DECIMAL 1000000
-#define SIZE 1000000
+#define SIZE 10000000
 
 int h(float x, float y){
   if((x*x + y*y) <= 1)
@@ -21,22 +22,30 @@ int main(){
     /* initialize random seed: */
   srand (time(NULL));
 
-  for(int i = 0; i < SIZE; i++){
-    /* generate secret number between 0 and 10: */
-    iSecret = rand() % (CASA_DECIMAL + 1);
-    x = (float) iSecret / CASA_DECIMAL;
+  int num_threads, tid;
+  #pragma omp parallel num_threads(2) private(x, y)
+  { 
+    
+    x = omp_get_thread_num();
+    cout << x;
+    #pragma omp for
+      for(int i = 0; i < SIZE; i++){
+          
+        /* generate secret number between 0 and 10: */
+        iSecret = rand() % (CASA_DECIMAL + 1);
+        x = (float) iSecret / CASA_DECIMAL;
 
-    if((rand() % 2))
-      x = -x;
+        if((rand() % 2))
+          x = -x;
 
-    iSecret = rand() % (CASA_DECIMAL + 1);
-    y = (float) iSecret / CASA_DECIMAL;
+        iSecret = rand() % (CASA_DECIMAL + 1);
+        y = (float) iSecret / CASA_DECIMAL;
 
-    if((rand() % 2))
-      y = -y;
-
-    sum += h(x,y);
+        if((rand() % 2))
+          y = -y;
+        sum += h(x,y);
+      }
   }
   sum = sum * 4 / SIZE;
-  cout << "Soma porra: " << sum;
+  cout << endl << "Soma porra: " << sum;
 }
